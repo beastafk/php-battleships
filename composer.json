@@ -5,6 +5,7 @@
 		"psr-0": { "": "src/" }
 	},
 	"require": {
-		"php": ">=7.0"
+		"php": ">=7.0",
+		"symfony/var-dumper": "v3.2"
 	}
 }
