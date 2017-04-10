@@ -1,0 +1,10 @@
+{
+	"name": "borislav/battleships",
+	"description": "Battleships game as a test task.",
+	"autoload": {
+		"psr-0": { "": "src/" }
+	},
+	"require": {
+		"php": ">=7.0"
+	}
+}
