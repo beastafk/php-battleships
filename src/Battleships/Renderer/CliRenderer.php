@@ -7,7 +7,7 @@ use Battleships\Model\Board;
 use Battleships\Model\BoardField;
 use Battleships\Model\State;
 
-class WebRenderer extends AbstractRenderer implements RendererInterface {
+class CliRenderer extends AbstractRenderer implements RendererInterface {
 
 	/**
 	 * @param string $result
@@ -20,8 +20,6 @@ class WebRenderer extends AbstractRenderer implements RendererInterface {
 		}
 
 		$board = $state->getBoard();
-
-		echo "<pre>";
 
 		echo $result !== '' ? $result : $this->newLine;
 
@@ -48,21 +46,17 @@ class WebRenderer extends AbstractRenderer implements RendererInterface {
 		}
 
 		echo $this->newLine;
-		echo "</pre>";
 
-		echo '
-			<form name="input" action="index.php" method="post">
-				Enter coordinates (row, col), e.g. A5 <input type="input" size="5" name="coord" autocomplete="off" autofocus="">
-				<input type="submit">
-			</form>
-		';
+		echo 'Enter coordinates (row, col), e.g. A5:';
 	}
 
 	/**
 	 * @param State $state
 	 */
 	private function renderGameOver(State $state) {
-		echo sprintf("<p>Well done! You completed the game in %d shots.</p>", $state->getShotsTaken());
-		echo '<p><a href="index.php">Play again?</a></p>';
+		echo sprintf("Well done! You completed the game in %d shots.", $state->getShotsTaken());
+		echo $this->newLine;
+		echo 'Play again?';
+		echo $this->newLine;
 	}
 }

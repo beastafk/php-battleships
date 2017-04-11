@@ -13,7 +13,7 @@ use Battleships\Helper\StateCreator;
 use Battleships\Exception\CannotPlaceShipException;
 use Battleships\Renderer\RendererInterface;
 
-class WebController {
+class CliController {
 
 	private $stateStorage;
 	private $stateCreator;
@@ -34,60 +34,47 @@ class WebController {
 
 	public function run() {
 		$activateCheat = false;
-		$resetGame = false;
 		$error = null;
 		$result = '';
-		$input = $this->getInputFromRequest($_POST);
+		$stdin = fopen('php://stdin', 'r');
+		$input = null;
 
-		if ($input === 'show') {
-			$input = null;
-			$activateCheat = true;
-		}
+		$currentGameState = $currentGameState = $this->stateCreator->createEmptyState();
+		$this->renderer->render('', $currentGameState, $activateCheat);
 
-		if ($input === 'reset') {
-			$input = null;
-			$resetGame = true;
-		}
+		while (true) {
+			$input = $this->getInputFromSTDIN($stdin);
 
-		$currentGameState = $this->stateStorage->getState();
+			if ($input === 'show') {
+				$input = null;
+				$activateCheat = true;
+			}
 
-		if ($resetGame || $currentGameState === null) {
-			try {
-				$currentGameState = $this->stateCreator->createEmptyState();
-			} catch (CannotPlaceShipException $e) {
-				$error = $e->getMessage();
+			if ($input === 'reset') {
+				$input = null;
+				$currentGameState = $currentGameState = $this->stateCreator->createEmptyState();
+			}
+
+			if ($input) {
+				$result = $this->gameProcessor->handleInput($currentGameState, $input);
+			}
+
+			$this->renderer->render($result, $currentGameState, $activateCheat);
+			$activateCheat = false;
+
+			if ($result === GameProcessor::HANDLE_GAME_OVER) {
+				exit;
 			}
 		}
-
-		if ($input) {
-			$result = $this->gameProcessor->handleInput($currentGameState, $input);
-		}
-
-		if ($error !== null) {
-			echo "ERROR: " . $error;
-			return;
-		}
-
-		$this->renderer->render($result, $currentGameState, $activateCheat);
-
-
-		if ($result === GameProcessor::HANDLE_GAME_OVER) {
-			$currentGameState = $this->stateCreator->createEmptyState();
-		}
-
-		$this->stateStorage->saveState($currentGameState);
 	}
 
 	/**
 	 *
-	 * @param array $request
+	 * @param mixed $stdin
 	 * @return NULL|string
 	 */
-	private function getInputFromRequest($request) {
-		if (!isset($request['coord'])) {
-			return null;
-		}
+	private function getInputFromSTDIN($stdin) {
 
-		return trim($request['coord']);
+		return trim(fgets($stdin));
 	}
 }

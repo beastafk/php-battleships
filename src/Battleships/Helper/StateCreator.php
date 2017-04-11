@@ -13,12 +13,21 @@ class StateCreator {
 	private $horizontalSize;
 	private $shipPlacementService;
 
+	/**
+	 * @param int $verticalSize
+	 * @param int $horizontalSize
+	 * @param ShipPlacementInterface $shipPlacementService
+	 */
 	public function __construct(int $verticalSize, int $horizontalSize, ShipPlacementInterface $shipPlacementService) {
 		$this->verticalSize = $verticalSize;
 		$this->horizontalSize = $horizontalSize;
 		$this->shipPlacementService = $shipPlacementService;
 	}
 
+	/**
+	 * @return State
+	 * @throws CannotPlaceShipException
+	 */
 	public function createEmptyState() {
 		$board = new Board($this->verticalSize, $this->horizontalSize);
 		try {

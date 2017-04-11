@@ -6,6 +6,10 @@ use Battleships\Model\State;
 
 interface StateStorageInterface {
 
+	/**
+	 * @param State $currentState
+	 * @return mixed
+	 */
 	public function saveState(State $currentState);
 
 

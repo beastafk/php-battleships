@@ -3,8 +3,15 @@
 namespace Battleships\Renderer;
 
 use Battleships\Model\Board;
+use Battleships\Model\State;
 
 interface RendererInterface {
 
-	public function render(Board $board, bool $activateCheat);
+	/**
+	 * @param string $result
+	 * @param State $state
+	 * @param bool $activateCheat
+	 * @return mixed
+	 */
+	public function render($result, State $state, bool $activateCheat);
 }
