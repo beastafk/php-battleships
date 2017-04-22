@@ -2,8 +2,6 @@
 
 namespace Battleships\Validator;
 
-use Battleships\Model\State;
-
 class StateInputValidator implements ValidatorInterface {
 
 	const INVALID_INPUT_GIVEN = "The given input is not a valid option.";
